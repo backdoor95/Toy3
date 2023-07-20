@@ -1,15 +1,12 @@
 package com.fastcampus.toy3.domain.user;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.*;
 import java.sql.Timestamp;
-
+@ToString
 @DynamicInsert
 @NoArgsConstructor// 이 친구가 없으면 select 조회했을때, 영속성 컨텍스트에 User 엔티티가 안만들어진다.
 @Getter

@@ -15,7 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,11 +40,11 @@ public class UserController {
         return "user/login";
     }
 
-    @GetMapping("/join")
-    public String showJoinForm(Model model) {
-        model.addAttribute("joinDTO", new UserRequest.JoinDTO());
-        return "user/join";
-    }
+//    @GetMapping("/join")
+//    public String showJoinForm(Model model) {
+//        model.addAttribute("joinDTO", new UserRequest.JoinDTO());
+//        return "user/join";
+//    }
 
 //    @PostMapping("/join")
 //    public String join(@ModelAttribute("joinDTO") @Valid UserRequest.JoinDTO joinDTO, Errors errors, RedirectAttributes redirectAttributes) {
@@ -54,9 +54,15 @@ public class UserController {
 //    }
 
 
+    @GetMapping("/admin")
+    public String showJoinForm(Model model) {
+        model.addAttribute("joinDTO", new UserRequest.JoinDTO());
+        return "user/join";
+    }
+
     @PostMapping("/join")
-    public String join(@RequestBody @Valid UserRequest.JoinDTO joinDTO, Errors errors) {
-        if(errors.hasErrors()){
+    public String join(@ModelAttribute("joinDTO") @Valid UserRequest.JoinDTO joinDTO, Errors errors) {
+        if (errors.hasErrors()) {
             return "user/join";
         }
         UserResponse.JoinDTO responseBody = userService.join(joinDTO);
@@ -76,10 +82,11 @@ public class UserController {
     @PostMapping({"/login", "/"})
     public String login(@ModelAttribute("loginDTO") @Valid UserRequest.LoginDTO loginDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/login";
+            return "user/login";
         }
 
-        //String jwt = userService.login(loginDTO);
+        String jwt = userService.login(loginDTO);
+        System.out.println(jwt);
         // 로그인 처리 로직
         return "redirect:/home";
     }

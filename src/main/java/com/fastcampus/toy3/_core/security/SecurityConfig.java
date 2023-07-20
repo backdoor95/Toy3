@@ -83,7 +83,7 @@ public class SecurityConfig {
         // 11. 인증, 권한 필터 설정
         http
                 .authorizeRequests()
-                .antMatchers("/login", "/home", "/join").permitAll() // 여기에 /join 추가
+                .antMatchers("/", "/h2-console/**", "/login", "/home", "/join","/admin").permitAll() // 여기에 /join 추가
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

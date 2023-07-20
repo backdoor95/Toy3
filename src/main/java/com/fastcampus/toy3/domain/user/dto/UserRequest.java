@@ -1,5 +1,6 @@
-package com.fastcampus.toy3.user;
+package com.fastcampus.toy3.domain.user.dto;
 
+import com.fastcampus.toy3.domain.user.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,8 +9,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class UserRequest {
-    @Setter
-    @Getter
+
+    @Getter @Setter
     public static class LoginDTO {
         @Pattern(regexp = "^[a-zA-Z0-9]{2,20}$", message = "영문/숫자 2~20자 이내로 작성해주세요")
         @NotEmpty
@@ -19,13 +20,10 @@ public class UserRequest {
         private String password;
     }
 
-
-    @Setter
-    @Getter
+    @Getter @Setter
     public static class JoinDTO {
-
-        @Pattern(regexp = "^[a-zA-Z0-9]{2,20}$", message = "영문/숫자 2~20자 이내로 작성해주세요")
         @NotEmpty
+        @Pattern(regexp = "^[a-zA-Z0-9]{2,20}$", message = "영문/숫자 2~20자 이내로 작성해주세요")
         private String username;
 
         @NotEmpty
@@ -38,15 +36,16 @@ public class UserRequest {
 
         @NotEmpty
         @Pattern(regexp = "^[a-zA-Z가-힣]{1,20}$", message = "한글/영문 1~20자 이내로 작성해주세요")
-        private String nickName;
+        private String nickname;
 
-        public User toEntity() {
+        public User toEntity(){
             return User.builder()
                     .username(username)
                     .password(password)
                     .email(email)
-                    .nickName(nickName)
+                    .nickname(nickname)
                     .status(true)
+                    .roles("USER")
                     .build();
         }
     }

@@ -1,6 +1,13 @@
-package com.fastcampus.toy3.user;
+package com.fastcampus.toy3.domain.user.service;
 
 
+import com.fastcampus.toy3._core.erros.exception.Exception401;
+import com.fastcampus.toy3._core.security.JwtTokenProvider;
+import com.fastcampus.toy3._core.security.MyUserDetails;
+import com.fastcampus.toy3.domain.user.User;
+import com.fastcampus.toy3.domain.user.dto.UserRequest;
+import com.fastcampus.toy3.domain.user.dto.UserResponse;
+import com.fastcampus.toy3.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +31,8 @@ public class UserService {
         // 1. 동일 유저네임 존재 검사
         Optional<User> userOP = userRepository.findByUsername(joinDTO.getUsername());
         if (userOP.isPresent()) {
-            throw new Exception400("username", "동일한 유저네임이 존재합니다");
+            //throw new Exception400("username", "동일한 유저네임이 존재합니다");
+            System.out.println("동일한 유저네임이 존재합니다");
         }
 
         // 2. 회원가입

@@ -1,12 +1,17 @@
-package com.fastcampus.toy3.user;
+package com.fastcampus.toy3.domain.user.controller;
 
 
+import com.fastcampus.toy3.domain.user.dto.UserRequest;
+import com.fastcampus.toy3.domain.user.dto.UserResponse;
+import com.fastcampus.toy3.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
@@ -17,34 +22,50 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.security.Principal;
 
+
 @RequiredArgsConstructor
 @Controller
 public class UserController {
+
     private final UserService userService;
 
+
+    @GetMapping("/")
+    public String firstCheck(Principal principal){
+        if(principal != null) {
+            // 이미 로그인된 사용자가 있다면, "home" 페이지로 리다이렉트합니다.
+            return "redirect:/home";
+        }
+        // 로그인된 사용자가 없다면, 다른 페이지 (예: 로그인 페이지)로 이동하게 할 수 있습니다.
+        return "user/login";
+    }
+
     @GetMapping("/join")
-    public String showJoin(Model model) {
+    public String showJoinForm(Model model) {
         model.addAttribute("joinDTO", new UserRequest.JoinDTO());
         return "user/join";
     }
 
 //    @PostMapping("/join")
-//    public String join(@RequestBody @Valid UserRequest.JoinDTO joinDTO, Errors errors) {
-//        if(errors.hasErrors()){
-//            return "user/join";
-//        }
+//    public String join(@ModelAttribute("joinDTO") @Valid UserRequest.JoinDTO joinDTO, Errors errors, RedirectAttributes redirectAttributes) {
 //        UserResponse.JoinDTO responseBody = userService.join(joinDTO);
-//        System.out.println("회원가입 완료");
-//        // 회원가입 처리 로직
-//        return "redirect:/login";
+//        redirectAttributes.addFlashAttribute("successMessage", "회원가입이 성공적으로 완료되었습니다. 로그인 해주세요!");
+//        return "redirect:/login"; // 리다이렉트할 페이지로 변경해주세요.
 //    }
 
+
     @PostMapping("/join")
-    public String join(@ModelAttribute("joinDTO") @Valid UserRequest.JoinDTO joinDTO, Errors errors, RedirectAttributes redirectAttributes) {
+    public String join(@RequestBody @Valid UserRequest.JoinDTO joinDTO, Errors errors) {
+        if(errors.hasErrors()){
+            return "user/join";
+        }
         UserResponse.JoinDTO responseBody = userService.join(joinDTO);
-        redirectAttributes.addFlashAttribute("successMessage", "회원가입이 성공적으로 완료되었습니다. 로그인 해주세요!");
-        return "redirect:/login"; // 리다이렉트할 페이지로 변경해주세요.
+        System.out.println("회원가입 완료");
+        System.out.println(responseBody);
+        // 회원가입 처리 로직
+        return "redirect:/login";
     }
+
 
     @GetMapping({"/login", "/"})
     public String showLogin(Model model) {
@@ -58,7 +79,7 @@ public class UserController {
             return "/login";
         }
 
-        String jwt = userService.login(loginDTO);
+        //String jwt = userService.login(loginDTO);
         // 로그인 처리 로직
         return "redirect:/home";
     }

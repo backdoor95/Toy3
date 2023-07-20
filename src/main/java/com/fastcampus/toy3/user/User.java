@@ -33,7 +33,7 @@ public class User { // extends 시간설정 (상속)
     @Column(nullable = false, length = 50)
     private String email;
 
-    @Column(unique = true, nullable = false, length = 20)
+    @Column(name = "nickname", unique = true, nullable = false, length = 20)
     private String nickName;
 
     @Column(columnDefinition = "VARCHAR(255) default '새싹회원'")

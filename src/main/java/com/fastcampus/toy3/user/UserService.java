@@ -1,9 +1,6 @@
 package com.fastcampus.toy3.user;
 
-import com.fastcampus.toy3._core.erros.exception.Exception400;
-import com.fastcampus.toy3._core.erros.exception.Exception401;
-import com.fastcampus.toy3._core.security.JwtTokenProvider;
-import com.fastcampus.toy3._core.security.MyUserDetails;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

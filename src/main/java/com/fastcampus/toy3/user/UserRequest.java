@@ -38,14 +38,14 @@ public class UserRequest {
 
         @NotEmpty
         @Pattern(regexp = "^[a-zA-Z가-힣]{1,20}$", message = "한글/영문 1~20자 이내로 작성해주세요")
-        private String fullName;
+        private String nickName;
 
         public User toEntity() {
             return User.builder()
                     .username(username)
                     .password(password)
                     .email(email)
-                    .nickName(fullName)
+                    .nickName(nickName)
                     .status(true)
                     .build();
         }

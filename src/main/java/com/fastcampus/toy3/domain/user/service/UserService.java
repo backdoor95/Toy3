@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,14 +44,17 @@ public class UserService {
         return new UserResponse.JoinDTO(userPS);
     }
 
-    @Transactional(readOnly = true) // 변경감지 하지 않음
-    public String login(UserRequest.LoginDTO loginDTO) {
+    @Transactional // 변경감지 하지 않음
+    public User login(UserRequest.LoginDTO loginDTO) {
         try {
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                     = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-            return JwtTokenProvider.create(myUserDetails.getUser());
+            // myUserDetails에서 사용자 이름을 가져와 해당 사용자를 데이터베이스에서 찾습니다.
+            return userRepository.findByUsername(myUserDetails.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("유저를 찾지 못했습니다.!"));
+
         }catch (Exception e){
             throw new Exception401("인증되지 않았습니다");
         }

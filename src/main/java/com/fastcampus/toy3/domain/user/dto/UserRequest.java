@@ -45,7 +45,7 @@ public class UserRequest {
                     .email(email)
                     .nickname(nickname)
                     .status(true)
-                    .roles("USER")
+                    .roles("새싹회원")
                     .build();
         }
     }

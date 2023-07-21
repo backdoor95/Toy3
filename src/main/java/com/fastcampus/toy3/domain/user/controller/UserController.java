@@ -1,6 +1,7 @@
 package com.fastcampus.toy3.domain.user.controller;
 
 
+import com.fastcampus.toy3.domain.user.User;
 import com.fastcampus.toy3.domain.user.dto.UserRequest;
 import com.fastcampus.toy3.domain.user.dto.UserResponse;
 import com.fastcampus.toy3.domain.user.service.UserService;
@@ -30,21 +31,21 @@ public class UserController {
     private final UserService userService;
 
 
-    @GetMapping("/")
-    public String firstCheck(Principal principal){
-        if(principal != null) {
-            // 이미 로그인된 사용자가 있다면, "home" 페이지로 리다이렉트합니다.
-            return "redirect:/home";
-        }
-        // 로그인된 사용자가 없다면, 다른 페이지 (예: 로그인 페이지)로 이동하게 할 수 있습니다.
-        return "user/login";
-    }
-
-//    @GetMapping("/join")
-//    public String showJoinForm(Model model) {
-//        model.addAttribute("joinDTO", new UserRequest.JoinDTO());
-//        return "user/join";
+//    @GetMapping("/")
+//    public String firstCheck(Principal principal){
+//        if(principal != null) {
+//            // 이미 로그인된 사용자가 있다면, "home" 페이지로 리다이렉트합니다.
+//            return "redirect:/home";
+//        }
+//        // 로그인된 사용자가 없다면, 다른 페이지 (예: 로그인 페이지)로 이동하게 할 수 있습니다.
+//        return "user/login";
 //    }
+
+    @GetMapping("/join")
+    public String showJoinForm(Model model) {
+        model.addAttribute("joinDTO", new UserRequest.JoinDTO());
+        return "user/join";
+    }
 
 //    @PostMapping("/join")
 //    public String join(@ModelAttribute("joinDTO") @Valid UserRequest.JoinDTO joinDTO, Errors errors, RedirectAttributes redirectAttributes) {
@@ -54,11 +55,6 @@ public class UserController {
 //    }
 
 
-    @GetMapping("/admin")
-    public String showJoinForm(Model model) {
-        model.addAttribute("joinDTO", new UserRequest.JoinDTO());
-        return "user/join";
-    }
 
     @PostMapping("/join")
     public String join(@ModelAttribute("joinDTO") @Valid UserRequest.JoinDTO joinDTO, Errors errors) {
@@ -73,20 +69,21 @@ public class UserController {
     }
 
 
-    @GetMapping({"/login", "/"})
+    @GetMapping("/login")
     public String showLogin(Model model) {
         model.addAttribute("loginDTO", new UserRequest.LoginDTO());
         return "user/login";
     }
 
-    @PostMapping({"/login", "/"})
+    @PostMapping("/login")
     public String login(@ModelAttribute("loginDTO") @Valid UserRequest.LoginDTO loginDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "user/login";
         }
 
-        String jwt = userService.login(loginDTO);
-        System.out.println(jwt);
+        User user = userService.login(loginDTO);
+        System.out.println(user);
+        //System.out.println(jwt);
         // 로그인 처리 로직
         return "redirect:/home";
     }
@@ -108,5 +105,7 @@ public class UserController {
 
         return "user/home";
     }
+
+
 
 }
